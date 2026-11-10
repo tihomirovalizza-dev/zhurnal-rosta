@@ -1,10 +1,11 @@
 -- Одна таблица для всех записей журнала. Каждый пользователь видит и меняет только свои строки.
 create table if not exists public.docs (
   user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
-  coll text not null check (coll in ('days', 'weeks', 'tests', 'open')),
+  coll text not null constraint docs_coll_check check (coll in ('days', 'weeks', 'tests', 'open', 'settings')),
   id text not null,
   data jsonb not null,
-  primary key (user_id, coll, id)
+  primary key (user_id, coll, id),
+  constraint docs_size_check check (char_length(id) <= 100 and pg_column_size(data) <= 102400)
 );
 
 alter table public.docs enable row level security;

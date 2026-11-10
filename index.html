@@ -10,7 +10,18 @@
 <meta name="theme-color" content="#edf0f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#11141f" media="(prefers-color-scheme: dark)">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
-<title>Журнал роста</title>
+<title>Журнал роста: трекер привычек и целей онлайн</title>
+<meta name="description" content="Бесплатный онлайн-трекер привычек и целей на русском. Отмечайте занятия за пару минут, заканчивайте дела и сравнивайте себя с прошлым месяцем. Работает на телефоне и без интернета.">
+<link rel="canonical" href="https://tihomirovalizza-dev.github.io/zhurnal-rosta/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Журнал роста">
+<meta property="og:title" content="Журнал роста: трекер привычек и целей онлайн">
+<meta property="og:description" content="Бесплатный онлайн-трекер привычек и целей на русском. Отмечайте занятия за пару минут, заканчивайте дела и сравнивайте себя с прошлым месяцем. Работает на телефоне и без интернета.">
+<meta property="og:url" content="https://tihomirovalizza-dev.github.io/zhurnal-rosta/">
+<meta property="og:image" content="https://tihomirovalizza-dev.github.io/zhurnal-rosta/icons/icon-512.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Журнал роста","url":"https://tihomirovalizza-dev.github.io/zhurnal-rosta/","applicationCategory":"LifestyleApplication","operatingSystem":"Any","inLanguage":"ru","description":"Бесплатный онлайн-трекер привычек и целей на русском. Отмечайте занятия за пару минут, заканчивайте дела и сравнивайте себя с прошлым месяцем. Работает на телефоне и без интернета.","offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"}}</script>
+<script>try{if(localStorage.getItem('zhurnal-session-v1'))document.documentElement.classList.add('in')}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
@@ -183,6 +194,17 @@ td.now { box-shadow: inset 0 0 0 2px var(--ink); }
 .log li.month time { color: var(--accent); font-weight: 600; }
 .empty { margin: 0; padding: 14px; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); font-size: 14.5px; }
 
+.in .landing { display: none; }
+.landing { display: grid; gap: 10px; min-width: 0; }
+.landing h1 { font: 700 clamp(24px, 7vw, 34px)/1.2 var(--display); margin: 0; text-wrap: balance; }
+.landing h2 { font-size: 18px; }
+.landing p { margin: 0; color: var(--muted); }
+.landing ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.landing li b { display: block; font-weight: 600; }
+.landing li span { color: var(--muted); }
+.consent { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; align-items: start; font-weight: 400; font-size: 14.5px; }
+.consent input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--accent); }
+a.link { font-size: inherit; }
 .btnrow { display: flex; flex-wrap: wrap; gap: 8px; }
 .btn { min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; cursor: pointer; }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
@@ -199,9 +221,27 @@ td.now { box-shadow: inset 0 0 0 2px var(--ink); }
       <button type="button" data-view="today">Сегодня</button>
       <button type="button" data-view="week">Неделя</button>
       <button type="button" data-view="growth">Рост</button>
+      <button type="button" data-view="goals">Занятия</button>
     </nav>
   </header>
+  <div class="landing">
+    <h1>Трекер привычек, который показывает реальный прогресс</h1>
+    <p>Журнал роста помогает держать привычки и доводить дела до конца. Несколько отметок вечером, короткий разбор в воскресенье и честное сравнение с собой месяц назад.</p>
+  </div>
   <main id="main"></main>
+  <section class="landing" aria-label="О трекере">
+    <h2>Что умеет трекер привычек</h2>
+    <ul>
+      <li><b>Свои привычки и критерии</b><span>Спорт, учёба, языки, растяжка: вы сами решаете, что отслеживать и что считать выполненным.</span></li>
+      <li><b>Цель +300% на сложном проценте</b><span>Каждая тренировка умножает результат на 1,01. Первый пропуск прощается, плановый отдых не штрафуется.</span></li>
+      <li><b>Законченные дела</b><span>Одно дело на день и ответ вечером: сделано или нет. В итоге виден список результатов, а не процесс.</span></li>
+      <li><b>Список «Висит в голове»</b><span>Запишите, что зависло, разбейте на пункты и закройте. Видно, сколько дней висит каждый пункт.</span></li>
+      <li><b>Разбор недели и замеры раз в месяц</b><span>Графики показывают, растёт ли регулярность и реальный результат.</span></li>
+      <li><b>На телефоне и без интернета</b><span>Добавьте сайт на экран телефона. Записи синхронизируются, когда появляется связь.</span></li>
+      <li><b>Только ваши данные</b><span>Другие пользователи не видят ваши записи. Трекер бесплатный, рекламы нет.</span></li>
+    </ul>
+    <p><a class="link" href="privacy.html">Политика конфиденциальности</a></p>
+  </section>
   <p class="status" id="status" role="status">Загружаю записи…</p>
 </div>
 
@@ -218,26 +258,8 @@ const LOCAL_KEY = 'zhurnal-rosta-v1';
 
 const FIT_MARKS = [['train', 'Тренировка'], ['rest', 'Отдых'], ['miss', 'Пропуск']];
 const FIT_GOAL = 4; // +300% = x4
-const GOALS = [
-  { id: 'go', field: 'go', name: 'Go',
-    done: 'Решённая задача, коммит, отправленное письмо или изучение определённой темы.',
-    tests: [['go_topics', 'Тем освоено'], ['go_tasks', 'Задач решено за месяц']],
-    hint: 'Раз в месяц. Тема считается освоенной, если получается пересказать её без конспекта и написать пример.' },
-  { id: 'calisthenics', field: 'fit', name: 'Калистеника',
-    done: 'Одна полная тренировка.',
-    tests: [['pullups', 'Подтягивания'], ['pushups', 'Отжимания']],
-    hint: 'Максимум за один подход, раз в месяц. Показывает, растёт ли сила вместе с регулярностью.' },
-  { id: 'fencing', field: 'fence', name: 'Фехтование',
-    done: 'Физическая подготовка или отработка уколов и ударов.',
-    tests: [['lunges', 'Выпады за минуту'], ['hits', 'Попаданий в мишень из 10']],
-    hint: 'Раз в месяц. Показывает, растёт ли техника вместе с регулярностью.' },
-  { id: 'stretching', field: 'stretch', name: 'Растяжка',
-    done: 'Растяжка на разные зоны.',
-    tests: [['split_front', 'Продольный шпагат, см до пола'], ['split_side', 'Поперечный шпагат, см до пола']],
-    hint: 'Раз в месяц, после разминки. Здесь чем меньше число, тем лучше.' },
-];
 
-const store = { days: {}, weeks: {}, tests: {}, open: {} };
+const store = { days: {}, weeks: {}, tests: {}, open: {}, settings: {} };
 const fitPts = {};
 const critOpen = new Set();
 const openExp = {};
@@ -379,14 +401,17 @@ function fitPct(idx) {
 }
 function fitLeft(idx) { return idx >= FIT_GOAL ? 0 : Math.ceil(Math.log(FIT_GOAL / idx) / Math.log(1.01) - 1e-9); }
 function fitLabel(g) { return fitPct(fitState(g).idx) + ' из +300%'; }
+function goals() { const s = store.settings.main; return s && Array.isArray(s.goals) ? s.goals : []; }
+function goalName(g) { return esc(g.name || 'Без названия'); }
 function fitToday(k) {
-  return '<section><div class="eyebrow"><h2>Тренировки</h2></div><div class="rows">' + GOALS.map(g => {
+  if (!goals().length) return '<section><div class="eyebrow"><h2>Тренировки</h2></div><p class="empty">Занятий пока нет. <button type="button" class="link" data-view="goals">Добавить первое занятие</button></p></section>';
+  return '<section><div class="eyebrow"><h2>Тренировки</h2></div><div class="rows">' + goals().map(g => {
     const cur = dayDoc(k)[g.field];
-    return '<div class="row fit"><div><div class="eyebrow"><h2>' + g.name + '</h2><small id="fit-now-' + g.id + '">' + fitLabel(g) + '</small></div>' +
-      '<button type="button" class="chev" data-crit="' + g.id + '" aria-expanded="' + critOpen.has(g.id) + '" aria-controls="crit-' + g.id + '" aria-label="' + g.name + ': что считается">' +
+    return '<div class="row fit"><div><div class="eyebrow"><h2>' + goalName(g) + '</h2><small id="fit-now-' + g.id + '">' + fitLabel(g) + '</small></div>' +
+      '<button type="button" class="chev" data-crit="' + g.id + '" aria-expanded="' + critOpen.has(g.id) + '" aria-controls="crit-' + g.id + '" aria-label="' + goalName(g) + ': что считается">' +
       '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg></button>' +
-      '<p class="focus" id="crit-' + g.id + '"' + (critOpen.has(g.id) ? '' : ' hidden') + '>Считается: ' + g.done + '</p></div>' +
-      '<div class="seg" role="group" aria-label="' + g.name + '">' +
+      '<p class="focus" id="crit-' + g.id + '"' + (critOpen.has(g.id) ? '' : ' hidden') + '>Считается: ' + (g.done ? esc(g.done) : 'критерий не задан') + '</p></div>' +
+      '<div class="seg" role="group" aria-label="' + goalName(g) + '">' +
       FIT_MARKS.map(([v, l]) => '<button type="button" data-fit-goal="' + g.id + '" data-fit="' + v + '" aria-pressed="' + (cur === v) + '">' + l + '</button>').join('') +
       '</div></div>';
   }).join('') + '</div></section>';
@@ -412,7 +437,7 @@ function fitChart(g, series) {
   const grid = [0, top / 2, top].map(v =>
     '<line class="grid" x1="' + L + '" x2="' + (W - R) + '" y1="' + yOf(v) + '" y2="' + yOf(v) + '"/>' +
     '<text x="' + (L - 6) + '" y="' + (yOf(v) + 4) + '" text-anchor="end">' + (v ? '+' + v + '%' : '0%') + '</text>').join('');
-  return '<svg class="chart" data-chart="' + g.id + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + g.name + ': прогресс, сейчас ' + fitPct(1 + last.pct / 100) + '">' +
+  return '<svg class="chart" data-chart="' + g.id + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + goalName(g) + ': прогресс, сейчас ' + fitPct(1 + last.pct / 100) + '">' +
     grid + '<polygon class="area" points="' + area + '"/><polyline class="line" points="' + line + '"/>' +
     '<text x="' + L + '" y="' + (H - 4) + '">' + fmtShort.format(parse(pts[0].k)) + '</text>' +
     '<text x="' + (W - R) + '" y="' + (H - 4) + '" text-anchor="end">' + fmtShort.format(parse(last.k)) + '</text>' +
@@ -432,17 +457,18 @@ function fitPoint(svg, p) {
 }
 function fitGrowth(g) {
   const s = fitState(g), month = todayKey().slice(0, 7), left = fitLeft(s.idx);
+  const tests = (g.tests || []).filter(([, l]) => l && l.trim());
   const fill = Math.min(100, (s.idx - 1) / (FIT_GOAL - 1) * 100);
   const now = store.tests[month] || {};
   const monthName = new Intl.DateTimeFormat('ru', { month: 'long' }).format(parse(month + '-01'));
-  const past = Object.keys(store.tests).filter(m => m !== month && g.tests.some(([f]) => typeof store.tests[m][f] === 'number')).sort().reverse().slice(0, 12);
+  const past = Object.keys(store.tests).filter(m => m !== month && tests.some(([f]) => typeof store.tests[m][f] === 'number')).sort().reverse().slice(0, 12);
   const history = past.length
-    ? '<div class="tablewrap"><table class="tests"><caption hidden>Прошлые замеры</caption><thead><tr><td></td>' + g.tests.map(([, l]) => '<th scope="col">' + l + '</th>').join('') + '</tr></thead><tbody>' +
+    ? '<div class="tablewrap"><table class="tests"><caption hidden>Прошлые замеры</caption><thead><tr><td></td>' + tests.map(([, l]) => '<th scope="col">' + esc(l) + '</th>').join('') + '</tr></thead><tbody>' +
       past.map(m => '<tr><th scope="row">' + new Intl.DateTimeFormat('ru', { month: 'short', year: '2-digit' }).format(parse(m + '-01')) + '</th>' +
-        g.tests.map(([f]) => '<td>' + (typeof store.tests[m][f] === 'number' ? store.tests[m][f] : '–') + '</td>').join('') + '</tr>').join('') +
+        tests.map(([f]) => '<td>' + (typeof store.tests[m][f] === 'number' ? store.tests[m][f] : '–') + '</td>').join('') + '</tr>').join('') +
       '</tbody></table></div>'
     : '';
-  return '<section><div class="eyebrow"><h2>' + g.name + '</h2><small>цель +300%</small></div>' +
+  return '<section><div class="eyebrow"><h2>' + goalName(g) + '</h2><small>цель +300%</small></div>' +
     '<p class="lead">' + fitPct(s.idx) + '</p>' +
     '<div class="meter" role="img" aria-label="Выполнено ' + Math.floor(fill) + '% пути к цели"><i style="width:' + fill.toFixed(1) + '%"></i></div>' +
     '<div class="scale"><span>0%</span><span>+300%</span></div>' +
@@ -450,11 +476,11 @@ function fitGrowth(g) {
       (left ? 'До цели минимум ' + left + ' ' + plural(left, 'тренировка', 'тренировки', 'тренировок') + '.' : 'Цель достигнута.') + '</p>' +
     '<details><summary>График и замеры</summary><div class="fields">' +
     fitChart(g, s.series) +
-    '<h2>Контрольный замер: ' + monthName + '</h2>' +
-    '<p class="sub">' + g.hint + '</p>' +
-    '<div class="pair">' + g.tests.map(([f, l]) =>
-      '<label for="test-' + f + '">' + l + '<input type="number" inputmode="numeric" min="0" id="test-' + f + '" data-test-month="' + month + '" data-test-field="' + f + '" value="' + (typeof now[f] === 'number' ? now[f] : '') + '"></label>').join('') +
-    '</div>' + history + '</div></details></section>';
+    (tests.length ? '<h2>Контрольный замер: ' + monthName + '</h2>' +
+    '<p class="sub">' + esc(g.hint || 'Раз в месяц.') + '</p>' +
+    '<div class="pair">' + tests.map(([f, l]) =>
+      '<label for="test-' + f + '">' + esc(l) + '<input type="number" inputmode="numeric" min="0" id="test-' + f + '" data-test-month="' + month + '" data-test-field="' + f + '" value="' + (typeof now[f] === 'number' ? now[f] : '') + '"></label>').join('') +
+    '</div>' + history : '') + '</div></details></section>';
 }
 
 /* ---------- views ---------- */
@@ -591,7 +617,7 @@ function renderGrowth() {
       : 'Первая картина появится после вечерней отметки') + '</p>' +
       '<p class="sub">Немного — 1 балл, шаг вперёд — 2. Важно сравнение с собой месяц назад, а не сама цифра.</p>' +
       '<div class="rows">' + cmp + '</div></section>' +
-    GOALS.map(fitGrowth).join('') +
+    goals().map(fitGrowth).join('') +
     '<section><div class="eyebrow"><h2>12 недель</h2></div>' + heat +
       '<div class="legend"><span><i></i>0</span><span><i class="b1"></i>1–3</span><span><i class="b2"></i>4–7</span><span><i class="b3"></i>8–11</span><span><i class="b4"></i>12–14</span><span>баллов за неделю</span></div></section>' +
     '<section><div class="eyebrow"><h2>Что закончено</h2></div>' +
@@ -599,11 +625,32 @@ function renderGrowth() {
     '</section>' + dataTools();
 }
 
+function goalRow(g) {
+  const field = (f, label, value, hint) => '<label for="goal-' + g.id + '-' + f + '">' + label + (hint ? '<small>' + hint + '</small>' : '') +
+    '<input type="text" id="goal-' + g.id + '-' + f + '" data-goal-id="' + g.id + '" data-goal-field="' + f + '" value="' + esc(value) + '"></label>';
+  const tests = g.tests || [];
+  return '<div class="row fit"><div class="fields">' +
+    field('name', 'Название', g.name) +
+    field('done', 'Что считается выполненным', g.done, 'Например: одна полная тренировка.') +
+    '<div class="pair">' +
+    field('test0', 'Замер раз в месяц', (tests[0] || [])[1]) +
+    field('test1', 'Второй замер', (tests[1] || [])[1]) +
+    '</div><div class="btnrow"><button type="button" class="btn" data-goal-remove="' + g.id + '">Убрать занятие</button></div></div></div>';
+}
+function renderGoals() {
+  const list = goals();
+  $main.innerHTML = '<section><p class="lead">Мои занятия</p>' +
+    '<p class="sub">У каждого занятия своя цель +300%: тренировка умножает результат на 1,01, каждый пропуск подряд после первого умножает на 0,99.</p>' +
+    (list.length ? '<div class="rows">' + list.map(goalRow).join('') + '</div>' : '<p class="empty">Здесь появится список твоих занятий. Добавь то, что хочешь делать регулярно.</p>') +
+    '<div class="btnrow"><button type="button" class="btn primary" data-goal-add="1">Добавить занятие</button></div></section>';
+}
+
 function render() {
   document.querySelectorAll('nav button').forEach(b => {
     if (b.dataset.view === view.name) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
   });
-  if (view.name === 'week') renderWeek();
+  if (view.name === 'goals') renderGoals();
+  else if (view.name === 'week') renderWeek();
   else if (view.name === 'growth') renderGrowth();
   else renderToday();
 }
@@ -693,7 +740,7 @@ function canon(v) {
   return v;
 }
 async function pull() {
-  const next = { days: {}, weeks: {}, tests: {}, open: {} };
+  const next = { days: {}, weeks: {}, tests: {}, open: {}, settings: {} };
   for (let from = 0; ; from += 1000) {
     const rows = await (await api('/rest/v1/docs?select=coll,id,data&order=coll,id&limit=1000&offset=' + from)).json();
     rows.forEach(r => { if (next[r.coll]) next[r.coll][r.id] = r.data; });
@@ -705,7 +752,7 @@ async function pull() {
   const changed = JSON.stringify(canon(next)) !== JSON.stringify(canon(store));
   Object.assign(store, next);
   saveLocal();
-  if (changed && !isEditing() && session) render();
+  if (changed && !isEditing() && session && !document.getElementById('new-password')) render();
 }
 async function sync() {
   if (!session || !CONFIG.url) return;
@@ -744,6 +791,25 @@ document.addEventListener('click', e => {
     render(); return;
   }
   if (b.dataset.weekShift) { view.week = addDays(view.week, Number(b.dataset.weekShift)); render(); return; }
+  if (b.dataset.goalAdd) {
+    const doc = store.settings.main || (store.settings.main = { goals: [] });
+    if (!Array.isArray(doc.goals)) doc.goals = [];
+    if (doc.goals.length >= 12) { setStatus('Можно добавить не больше 12 занятий.', true); return; }
+    const id = 'g' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+    doc.goals.push({ id, field: id, name: '', done: '', tests: [[id + '_1', ''], [id + '_2', '']] });
+    renderGoals();
+    document.getElementById('goal-' + id + '-name').focus();
+    schedule('settings', 'main');
+    return;
+  }
+  if (b.dataset.goalRemove) {
+    const doc = store.settings.main, g = goals().find(x => x.id === b.dataset.goalRemove);
+    if (!g || !confirm('Убрать занятие «' + (g.name || 'Без названия') + '»? Оно исчезнет из журнала.')) return;
+    doc.goals = doc.goals.filter(x => x !== g);
+    renderGoals();
+    schedule('settings', 'main');
+    return;
+  }
   if (b.dataset.openExp) {
     const id = b.dataset.openExp;
     openExp[id] = b.getAttribute('aria-expanded') !== 'true';
@@ -789,7 +855,7 @@ document.addEventListener('click', e => {
   }
   if (b.dataset.fit) {
     const k = view.date, doc = store.days[k] || (store.days[k] = {}), v = b.dataset.fit;
-    const g = GOALS.find(x => x.id === b.dataset.fitGoal);
+    const g = goals().find(x => x.id === b.dataset.fitGoal);
     if (doc[g.field] === v) delete doc[g.field]; else doc[g.field] = v;
     b.parentElement.querySelectorAll('button').forEach(x =>
       x.setAttribute('aria-pressed', String(doc[g.field] === x.dataset.fit)));
@@ -825,6 +891,16 @@ document.addEventListener('input', e => {
     const m = t.dataset.focusWeek, doc = store.weeks[m] || (store.weeks[m] = {});
     (doc.focus || (doc.focus = {}))[t.dataset.focusSphere] = t.value;
     schedule('weeks', m);
+  } else if (t.dataset.goalId) {
+    const g = goals().find(x => x.id === t.dataset.goalId), f = t.dataset.goalField;
+    if (!g) return;
+    if (f === 'test0' || f === 'test1') {
+      const slot = Number(f.slice(4));
+      if (!Array.isArray(g.tests)) g.tests = [];
+      if (!g.tests[slot]) g.tests[slot] = [g.id + '_' + (slot + 1), ''];
+      g.tests[slot][1] = t.value;
+    } else g[f] = t.value;
+    schedule('settings', 'main');
   } else if (t.dataset.taskDay) {
     const k = t.dataset.taskDay;
     (store.days[k] || (store.days[k] = {})).task = t.value;
@@ -891,7 +967,7 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('hashchange', () => {
   const h = location.hash.slice(1);
-  if (['today', 'week', 'growth'].includes(h) && h !== view.name) go(h);
+  if (['today', 'week', 'growth', 'goals'].includes(h) && h !== view.name) go(h);
 });
 function isEditing() { const a = document.activeElement; return !!a && (a.tagName === 'TEXTAREA' || a.tagName === 'INPUT'); }
 
@@ -899,20 +975,23 @@ function isEditing() { const a = document.activeElement; return !!a && (a.tagNam
 const $nav = document.querySelector('nav');
 function showLogin(message) {
   $nav.hidden = true;
+  document.documentElement.classList.remove('in');
   $main.inert = false;
   setStatus('');
   const configured = CONFIG.url && CONFIG.anonKey;
-  $main.innerHTML = '<section><p class="lead">Вход</p>' +
+  $main.innerHTML = '<section><p class="lead">Вход или регистрация</p>' +
     (configured
       ? '<form class="fields" id="login-form">' +
         '<label for="login-email">Почта<input type="email" id="login-email" autocomplete="username" required></label>' +
         '<label for="login-password">Пароль<input type="password" id="login-password" autocomplete="current-password" required></label>' +
-        '<div class="btnrow"><button type="submit" class="btn primary">Войти</button></div></form>'
+        '<label class="consent" for="login-consent"><input type="checkbox" id="login-consent"><span>При создании аккаунта принимаю <a class="link" href="privacy.html" target="_blank" rel="noopener">политику конфиденциальности</a></span></label>' +
+        '<div class="btnrow"><button type="submit" class="btn primary" value="login">Войти</button><button type="submit" class="btn" value="signup">Создать аккаунт</button></div><div><button type="button" class="link" data-action="forgot">Забыли пароль?</button></div><p class="sub">Новый человек вводит почту, придумывает пароль, отмечает согласие и нажимает «Создать аккаунт».</p></form>'
       : '<p class="sub">Приложение ещё не подключено к серверу: заполни адрес и ключ в файле config.js.</p>') +
     '<p class="sub" id="login-msg">' + esc(message) + '</p></section>';
 }
 function showApp() {
   $nav.hidden = false;
+  document.documentElement.classList.add('in');
   render();
 }
 function dataTools() {
@@ -921,7 +1000,8 @@ function dataTools() {
     '<div class="btnrow"><button type="button" class="btn" data-action="export">Скачать копию</button>' +
     '<button type="button" class="btn" data-action="import">Загрузить копию</button>' +
     '<button type="button" class="btn" data-action="logout">Выйти</button></div>' +
-    '<input type="file" id="import-file" accept="application/json,.json" hidden></div></details>';
+    '<input type="file" id="import-file" accept="application/json,.json" hidden>' +
+    '<p class="sub"><a class="link" href="privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a></p></div></details>';
 }
 function importData(text) {
   let data;
@@ -943,6 +1023,7 @@ document.addEventListener('click', e => {
   const b = e.target.closest('[data-action]');
   if (!b) return;
   const act = b.dataset.action;
+  if (act === 'forgot') { requestReset(); return; }
   if (act === 'export') {
     const url = URL.createObjectURL(new Blob([JSON.stringify(store, null, 1)], { type: 'application/json' }));
     const a = document.createElement('a');
@@ -965,22 +1046,127 @@ document.addEventListener('change', e => {
   if (e.target.id !== 'import-file' || !e.target.files[0]) return;
   e.target.files[0].text().then(importData);
 });
+const OWNER_KEY = 'zhurnal-owner-v1';
+/* Keeps one person's device data from mixing with the next account signed in on it. */
+function rememberOwner(id) {
+  let prev = null;
+  try { prev = localStorage.getItem(OWNER_KEY); localStorage.setItem(OWNER_KEY, id); } catch (err) {}
+  if (prev && prev !== id) {
+    outbox = {};
+    Object.keys(store).forEach(c => { store[c] = {}; });
+    saveLocal();
+  }
+}
+async function startSession(s) {
+  session = s;
+  saveSession();
+  rememberOwner(s.user.id);
+  showApp();
+  await refreshFromServer();
+}
+const SIGNUP_ERRORS = {
+  user_already_exists: 'Такая почта уже зарегистрирована. Нажми «Войти».',
+  email_exists: 'Такая почта уже зарегистрирована. Нажми «Войти».',
+  weak_password: 'Пароль слишком простой. Нужно не меньше 6 символов.',
+  signup_disabled: 'Регистрация сейчас закрыта.',
+  email_provider_disabled: 'Регистрация сейчас закрыта.',
+  validation_failed: 'Проверь почту и пароль.',
+  email_address_invalid: 'Проверь адрес почты.',
+  over_email_send_rate_limit: 'Слишком много регистраций подряд. Попробуй через час.',
+  over_request_rate_limit: 'Слишком много попыток. Попробуй позже.',
+};
 document.addEventListener('submit', async e => {
   if (e.target.id !== 'login-form') return;
   e.preventDefault();
   const msg = document.getElementById('login-msg');
-  msg.textContent = 'Вхожу…';
+  const signup = e.submitter && e.submitter.value === 'signup';
+  if (signup && !document.getElementById('login-consent').checked) { msg.textContent = 'Чтобы создать аккаунт, отметь согласие с политикой конфиденциальности.'; return; }
+  msg.textContent = signup ? 'Создаю аккаунт…' : 'Вхожу…';
+  const credentials = { email: document.getElementById('login-email').value.trim(), password: document.getElementById('login-password').value };
   try {
-    const r = await fetch(CONFIG.url + '/auth/v1/token?grant_type=password', {
+    const r = await fetch(CONFIG.url + (signup ? '/auth/v1/signup' : '/auth/v1/token?grant_type=password'), {
       method: 'POST',
       headers: { apikey: CONFIG.anonKey, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: document.getElementById('login-email').value.trim(), password: document.getElementById('login-password').value }),
+      body: JSON.stringify(signup ? Object.assign({ data: { privacy_accepted_at: new Date().toISOString() } }, credentials) : credentials),
     });
-    if (!r.ok) { msg.textContent = 'Неверная почта или пароль.'; return; }
-    session = await r.json();
-    saveSession();
+    const body = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      msg.textContent = signup ? (SIGNUP_ERRORS[body.error_code] || 'Не получилось создать аккаунт. Попробуй ещё раз.') : 'Неверная почта или пароль.';
+      return;
+    }
+    if (!body.access_token) { msg.textContent = 'Проверь почту и подтверди регистрацию по ссылке из письма, затем войди.'; return; }
+    await startSession(body);
+  } catch (err) {
+    msg.textContent = 'Нет связи с сервером. Проверь интернет.';
+  }
+});
+async function requestReset() {
+  const msg = document.getElementById('login-msg'), email = document.getElementById('login-email').value.trim();
+  if (!email) { msg.textContent = 'Впиши почту в поле выше и нажми «Забыли пароль?» ещё раз.'; return; }
+  msg.textContent = 'Отправляю…';
+  try {
+    const r = await fetch(CONFIG.url + '/auth/v1/recover?redirect_to=' + encodeURIComponent(location.origin + location.pathname), {
+      method: 'POST',
+      headers: { apikey: CONFIG.anonKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    msg.textContent = r.status === 429 ? 'Слишком много запросов. Попробуй позже.'
+      : r.ok ? 'Если такая почта зарегистрирована, на неё придёт письмо со ссылкой. Проверь и папку «Спам».'
+      : 'Не получилось отправить письмо. Попробуй позже.';
+  } catch (err) {
+    msg.textContent = 'Нет связи с сервером. Проверь интернет.';
+  }
+}
+function showNewPassword() {
+  $nav.hidden = true;
+  document.documentElement.classList.add('in');
+  $main.inert = false;
+  setStatus('');
+  $main.innerHTML = '<section><p class="lead">Новый пароль</p><form class="fields" id="new-password-form">' +
+    '<label for="new-password">Новый пароль<input type="password" id="new-password" autocomplete="new-password" required></label>' +
+    '<label for="new-password-2">Повтори пароль<input type="password" id="new-password-2" autocomplete="new-password" required></label>' +
+    '<div class="btnrow"><button type="submit" class="btn primary">Сохранить</button></div></form><p class="sub" id="new-password-msg"></p></section>';
+}
+async function handleAuthRedirect(p) {
+  try { history.replaceState(null, '', location.pathname); } catch (err) {}
+  if (!p.get('access_token')) { showLogin('Ссылка устарела или уже использована. Запроси новую.'); return; }
+  const tokens = { access_token: p.get('access_token'), refresh_token: p.get('refresh_token') };
+  try {
+    const r = await fetch(CONFIG.url + '/auth/v1/user', { headers: { apikey: CONFIG.anonKey, Authorization: 'Bearer ' + tokens.access_token } });
+    if (!r.ok) throw new Error('user');
+    tokens.user = await r.json();
+  } catch (err) {
+    showLogin('Не получилось открыть ссылку. Проверь интернет и запроси новую.');
+    return;
+  }
+  if (p.get('type') !== 'recovery') { await startSession(tokens); return; }
+  session = tokens;
+  saveSession();
+  rememberOwner(tokens.user.id);
+  showNewPassword();
+}
+document.addEventListener('submit', async e => {
+  if (e.target.id !== 'new-password-form') return;
+  e.preventDefault();
+  const msg = document.getElementById('new-password-msg'), password = document.getElementById('new-password').value;
+  if (password !== document.getElementById('new-password-2').value) { msg.textContent = 'Пароли не совпадают.'; return; }
+  msg.textContent = 'Сохраняю…';
+  try {
+    const r = await fetch(CONFIG.url + '/auth/v1/user', {
+      method: 'PUT',
+      headers: { apikey: CONFIG.anonKey, Authorization: 'Bearer ' + session.access_token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+    if (!r.ok) {
+      const body = await r.json().catch(() => ({}));
+      msg.textContent = body.error_code === 'same_password' ? 'Новый пароль должен отличаться от старого.'
+        : body.error_code === 'weak_password' ? 'Пароль слишком простой. Нужно не меньше 6 символов.'
+        : 'Ссылка устарела. Запроси письмо ещё раз.';
+      return;
+    }
     showApp();
     await refreshFromServer();
+    setStatus('Пароль изменён');
   } catch (err) {
     msg.textContent = 'Нет связи с сервером. Проверь интернет.';
   }
@@ -995,11 +1181,13 @@ window.addEventListener('online', () => sync());
 /* ---------- startup ---------- */
 (function boot() {
   const h = location.hash.slice(1);
-  if (['today', 'week', 'growth'].includes(h)) view.name = h;
+  if (['today', 'week', 'growth', 'goals'].includes(h)) view.name = h;
   const saved = loadJSON(LOCAL_KEY, null);
   if (saved) Object.keys(store).forEach(c => { store[c] = saved[c] || {}; });
-  if (!session) { showLogin(''); }
-  else { showApp(); setStatus('Обновляю…'); refreshFromServer(); }
+  const redirect = new URLSearchParams(location.hash.slice(1));
+  if (redirect.get('access_token') || redirect.get('error_code') || redirect.get('error')) handleAuthRedirect(redirect);
+  else if (!session) { showLogin(''); }
+  else { rememberOwner(session.user.id); showApp(); setStatus('Обновляю…'); refreshFromServer(); }
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 })();
 </script>
