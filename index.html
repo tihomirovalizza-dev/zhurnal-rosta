@@ -1,0 +1,1007 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Журнал">
+<meta name="theme-color" content="#edf0f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11141f" media="(prefers-color-scheme: dark)">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+<title>Журнал роста</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: one narrow phone-first column; three views (evening mark, weekly review, growth). */
+:root {
+  --bg: #edf0f7; --surface: #f9fafd; --ink: #18203a; --muted: #566080; --line: #d3d9e6;
+  --accent: #2a42c8; --on-accent: #ffffff; --soft: #d8def7;
+  --h0: #e1e5ef; --h1: #ccd5f5; --h2: #9dabec; --h3: #5f74dc; --h4: #2a42c8;
+  --warn: #a33a1f;
+  --display: "Unbounded", "Golos Text", system-ui, sans-serif;
+  --body: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11141f; --surface: #1a1e2d; --ink: #e8ebf5; --muted: #a0a9c2; --line: #2f3549;
+    --accent: #8fa1ff; --on-accent: #11141f; --soft: #2a3257;
+    --h0: #232838; --h1: #2e3a70; --h2: #4459b0; --h3: #6a80e6; --h4: #a9b7ff;
+    --warn: #ff9d80; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11141f; --surface: #1a1e2d; --ink: #e8ebf5; --muted: #a0a9c2; --line: #2f3549;
+  --accent: #8fa1ff; --on-accent: #11141f; --soft: #2a3257;
+  --h0: #232838; --h1: #2e3a70; --h2: #4459b0; --h3: #6a80e6; --h4: #a9b7ff;
+  --warn: #ff9d80; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 16px/1.5 var(--body); }
+.wrap {
+  max-width: 600px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px 48px;
+  display: grid; gap: 24px;
+}
+button, input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { font: 700 15px/1.2 var(--display); margin: 0; }
+nav { display: flex; gap: 4px; }
+nav button { border: 0; background: none; padding: 10px 12px; min-height: 44px; border-radius: 8px; color: var(--muted); font-weight: 500; cursor: pointer; }
+nav button[aria-current="page"] { background: var(--soft); color: var(--ink); }
+
+main { display: grid; gap: 28px; min-width: 0; }
+main[inert] { opacity: .55; }
+section { display: grid; gap: 12px; min-width: 0; }
+
+.head { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 8px; }
+.head > div { text-align: center; min-width: 0; }
+.head h1 { font: 700 clamp(20px, 6vw, 26px)/1.2 var(--display); margin: 0; text-wrap: balance; }
+.head p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.arrow { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-size: 20px; line-height: 1; }
+.arrow:disabled { opacity: .35; cursor: default; }
+
+h2 { font: 600 16px/1.3 var(--body); margin: 0; }
+.eyebrow { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.eyebrow small { color: var(--muted); font-size: 13px; white-space: nowrap; }
+
+.rows { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; align-items: center; padding: 14px; }
+.row + .row { border-top: 1px solid var(--line); }
+.row h2 { font-size: 15px; }
+.focus { margin: 2px 0 0; font-size: 13.5px; color: var(--muted); overflow-wrap: anywhere; }
+.link { border: 0; background: none; padding: 0; color: var(--accent); cursor: pointer; font-size: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.seg { display: flex; gap: 4px; }
+.seg button { min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: transparent; font-size: 14px; cursor: pointer; white-space: nowrap; }
+.seg button[aria-pressed="true"][data-level="0"] { background: var(--h0); border-color: var(--muted); }
+.seg button[aria-pressed="true"][data-level="1"] { background: var(--h2); border-color: var(--h2); color: #10183a; }
+.seg button[aria-pressed="true"][data-level="2"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+@media (max-width: 520px) {
+  .row { grid-template-columns: minmax(0, 1fr); }
+  .seg button { flex: 1 1 0; padding: 0 4px; }
+}
+
+label { display: grid; gap: 6px; font-weight: 500; font-size: 15px; }
+label small { font-weight: 400; color: var(--muted); font-size: 13px; }
+.row.fit { grid-template-columns: minmax(0, 1fr); }
+.chev { display: grid; place-items: center; width: 44px; height: 32px; margin: 0 -14px 0 auto; padding: 0; border: 0; background: none; color: var(--muted); cursor: pointer; }
+.chev svg { transition: transform .15s; }
+.chev[aria-expanded="true"] svg { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .chev svg { transition: none; } }
+.seg button[aria-pressed="true"][data-task-result="done"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+.seg button[aria-pressed="true"][data-task-result="no"] { background: var(--h0); border-color: var(--warn); color: var(--warn); font-weight: 600; }
+.openform { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.openform button { min-height: 44px; padding: 0 14px; border: 0; border-radius: 8px; background: var(--accent); color: var(--on-accent); font-weight: 600; cursor: pointer; }
+.open { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.open:empty { display: none; }
+.open li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.open p { margin: 0; overflow-wrap: anywhere; }
+.open small { display: block; color: var(--muted); font-size: 13px; }
+.open .late small { color: var(--warn); font-weight: 600; }
+.open .closed p { text-decoration: line-through; color: var(--muted); }
+.open .acts { display: flex; align-items: center; gap: 2px; }
+.open .chev { width: 36px; min-height: 44px; margin: 0; padding: 0; border: 0; }
+.panel { grid-column: 1 / -1; display: grid; gap: 4px; border-top: 1px solid var(--line); padding-top: 8px; }
+.step { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; }
+.step label { display: grid; grid-template-columns: 22px minmax(0, 1fr); align-items: center; gap: 8px; min-height: 40px; font-weight: 400; cursor: pointer; }
+.step input { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); }
+.step span { overflow-wrap: anywhere; }
+.step input:checked + span { text-decoration: line-through; color: var(--muted); }
+.open .step button { width: 36px; min-height: 36px; padding: 0; border: 0; color: var(--muted); font-size: 18px; }
+.stepform { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; margin-top: 4px; }
+.open .stepform button { width: 44px; padding: 0; font-size: 20px; }
+.open button { min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: transparent; cursor: pointer; font-size: 14px; }
+.row.fit .seg button { flex: 1 1 0; padding: 0 4px; }
+.seg button[aria-pressed="true"][data-fit="train"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+.seg button[aria-pressed="true"][data-fit="rest"] { background: var(--h0); border-color: var(--muted); }
+.seg button[aria-pressed="true"][data-fit="miss"] { background: var(--h0); border-color: var(--warn); color: var(--warn); font-weight: 600; }
+.meter { height: 10px; border-radius: 5px; background: var(--h0); overflow: hidden; }
+.meter i { display: block; height: 100%; border-radius: 5px; background: var(--accent); }
+.scale { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); margin-top: -6px; }
+.chart { display: block; width: 100%; height: auto; touch-action: pan-y; }
+.chart .grid { stroke: var(--line); stroke-width: 1; }
+.chart .area { fill: var(--accent); opacity: .12; }
+.chart .line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .cross { stroke: var(--muted); stroke-width: 1; }
+.chart .dot { fill: var(--accent); stroke: var(--bg); stroke-width: 2; }
+.chart text { fill: var(--muted); font-size: 12px; font-family: var(--body); font-variant-numeric: tabular-nums; }
+.readout { margin: -6px 0 0; font-size: 13.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tests { table-layout: fixed; }
+.tests th { white-space: normal; }
+.tests td { text-align: center; font-size: 14px; padding: 4px 0; }
+.tests th[scope="row"] { font-weight: 400; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: end; }
+textarea, input[type="text"], input[type="number"], input[type="email"], input[type="password"] { width: 100%; min-width: 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font-weight: 400; }
+textarea { resize: vertical; min-height: 76px; }
+::placeholder { color: var(--muted); opacity: .85; }
+
+details { border-top: 1px solid var(--line); padding-top: 12px; }
+summary { cursor: pointer; font-weight: 500; min-height: 28px; }
+details > div, details > ul { margin-top: 12px; }
+.howto { padding-left: 18px; color: var(--muted); font-size: 14.5px; display: grid; gap: 6px; margin-block: 12px 0; }
+.fields { display: grid; gap: 12px; }
+
+.tablewrap { overflow-x: auto; }
+table { border-collapse: separate; border-spacing: 3px; width: 100%; font-variant-numeric: tabular-nums; }
+th { font-weight: 500; font-size: 12.5px; color: var(--muted); text-align: center; padding: 0 0 2px; white-space: nowrap; }
+th[scope="row"] { text-align: left; color: var(--ink); padding-right: 6px; font-size: 13.5px; }
+td.c { height: 30px; min-width: 22px; border-radius: 5px; background: var(--h0); }
+td.total { text-align: right; font-size: 13.5px; color: var(--muted); padding-left: 6px; min-width: 28px; }
+.l1, .b1 { background: var(--h1) !important; }
+.l2, .b4 { background: var(--h4) !important; }
+.b2 { background: var(--h2) !important; }
+.b3 { background: var(--h3) !important; }
+td.now { box-shadow: inset 0 0 0 2px var(--ink); }
+.legend { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 12.5px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 4px; }
+.legend i { width: 14px; height: 14px; border-radius: 3px; background: var(--h0); display: inline-block; }
+
+.lead { font: 700 clamp(18px, 5vw, 22px)/1.3 var(--display); margin: 0; text-wrap: balance; }
+.sub { margin: 0; color: var(--muted); font-size: 14.5px; }
+.cmp { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 14px; }
+.cmp + .cmp { border-top: 1px solid var(--line); }
+.cmp b { font: 700 20px/1 var(--display); text-align: right; font-variant-numeric: tabular-nums; }
+.cmp span { display: block; font-size: 13.5px; color: var(--muted); }
+.cmp .up { color: var(--accent); font-weight: 600; }
+.cmp .name { font-size: 15px; font-weight: 500; color: var(--ink); }
+.heat { table-layout: fixed; }
+.heat .lab { width: 78px; }
+.heat thead th { text-align: left; overflow: visible; }
+.heat td.c { min-width: 0; }
+
+.log { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.log li { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 10px; font-size: 15px; }
+.log time { color: var(--muted); font-size: 13.5px; font-variant-numeric: tabular-nums; padding-top: 1px; }
+.log p { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.log li.month p { font-weight: 600; }
+.log li.month time { color: var(--accent); font-weight: 600; }
+.empty { margin: 0; padding: 14px; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); font-size: 14.5px; }
+
+.btnrow { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+.status { position: sticky; bottom: 0; margin: 0; padding-block: 8px calc(8px + env(safe-area-inset-bottom, 0px)); font-size: 13px; color: var(--muted); text-align: center; background: var(--bg); min-height: 36px; }
+.status.err { color: var(--warn); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <p class="brand">Журнал роста</p>
+    <nav aria-label="Разделы">
+      <button type="button" data-view="today">Сегодня</button>
+      <button type="button" data-view="week">Неделя</button>
+      <button type="button" data-view="growth">Рост</button>
+    </nav>
+  </header>
+  <main id="main"></main>
+  <p class="status" id="status" role="status">Загружаю записи…</p>
+</div>
+
+<script src="config.js"></script>
+<script>
+const SPHERES = [
+  { id: 'craft', name: 'Профессия и навыки', short: 'Профессия', ex: 'Например: пройти две главы курса' },
+  { id: 'body',  name: 'Здоровье и энергия', short: 'Здоровье',  ex: 'Например: три тренировки, сон до 23:30' },
+  { id: 'goals', name: 'Проекты и цели',     short: 'Проекты',   ex: 'Например: дописать черновик плана' },
+  { id: 'mind',  name: 'Мышление и отношения', short: 'Мышление', ex: 'Например: позвонить родителям, читать 20 минут' },
+];
+const LEVELS = [[0, 'Нет'], [1, 'Немного'], [2, 'Шаг вперёд']];
+const LOCAL_KEY = 'zhurnal-rosta-v1';
+
+const FIT_MARKS = [['train', 'Тренировка'], ['rest', 'Отдых'], ['miss', 'Пропуск']];
+const FIT_GOAL = 4; // +300% = x4
+const GOALS = [
+  { id: 'go', field: 'go', name: 'Go',
+    done: 'Решённая задача, коммит, отправленное письмо или изучение определённой темы.',
+    tests: [['go_topics', 'Тем освоено'], ['go_tasks', 'Задач решено за месяц']],
+    hint: 'Раз в месяц. Тема считается освоенной, если получается пересказать её без конспекта и написать пример.' },
+  { id: 'calisthenics', field: 'fit', name: 'Калистеника',
+    done: 'Одна полная тренировка.',
+    tests: [['pullups', 'Подтягивания'], ['pushups', 'Отжимания']],
+    hint: 'Максимум за один подход, раз в месяц. Показывает, растёт ли сила вместе с регулярностью.' },
+  { id: 'fencing', field: 'fence', name: 'Фехтование',
+    done: 'Физическая подготовка или отработка уколов и ударов.',
+    tests: [['lunges', 'Выпады за минуту'], ['hits', 'Попаданий в мишень из 10']],
+    hint: 'Раз в месяц. Показывает, растёт ли техника вместе с регулярностью.' },
+  { id: 'stretching', field: 'stretch', name: 'Растяжка',
+    done: 'Растяжка на разные зоны.',
+    tests: [['split_front', 'Продольный шпагат, см до пола'], ['split_side', 'Поперечный шпагат, см до пола']],
+    hint: 'Раз в месяц, после разминки. Здесь чем меньше число, тем лучше.' },
+];
+
+const store = { days: {}, weeks: {}, tests: {}, open: {} };
+const fitPts = {};
+const critOpen = new Set();
+const openExp = {};
+const view = { name: 'today', date: todayKey(), week: monday(todayKey()), followToday: true };
+const $main = document.getElementById('main');
+const $status = document.getElementById('status');
+
+/* ---------- dates ---------- */
+function pad(n) { return String(n).padStart(2, '0'); }
+function toKey(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function parse(k) { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); }
+function addDays(k, n) { const d = parse(k); d.setDate(d.getDate() + n); return toKey(d); }
+function todayKey() { return toKey(new Date()); }
+function monday(k) { return addDays(k, -((parse(k).getDay() + 6) % 7)); }
+const fmtDay = new Intl.DateTimeFormat('ru', { day: 'numeric', month: 'long' });
+const fmtDow = new Intl.DateTimeFormat('ru', { weekday: 'long' });
+const fmtShort = new Intl.DateTimeFormat('ru', { day: 'numeric', month: 'short' });
+const fmtMon = new Intl.DateTimeFormat('ru', { month: 'short' });
+function weekTitle(m) {
+  const a = parse(m), s = addDays(m, 6), b = parse(s);
+  return a.getMonth() === b.getMonth()
+    ? a.getDate() + '–' + fmtDay.format(b)
+    : fmtDay.format(a) + ' – ' + fmtDay.format(b);
+}
+
+/* ---------- helpers ---------- */
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function dayDoc(k) { return store.days[k] || {}; }
+function weekDoc(m) { return store.weeks[m] || {}; }
+function level(k, sid) { const s = dayDoc(k).steps; return s && typeof s[sid] === 'number' ? s[sid] : null; }
+function score(from, to, sid) {
+  let t = 0;
+  for (let k = from; k <= to; k = addDays(k, 1)) t += level(k, sid) || 0;
+  return t;
+}
+function isMarked(k) { const s = dayDoc(k).steps; return !!(s && Object.keys(s).length) || !!dayDoc(k).note; }
+function countMarked(from, to) { let n = 0; for (let k = from; k <= to; k = addDays(k, 1)) if (isMarked(k)) n++; return n; }
+function plural(n, one, few, many) {
+  const a = Math.abs(n) % 100, b = a % 10;
+  if (a > 10 && a < 20) return many;
+  if (b > 1 && b < 5) return few;
+  return b === 1 ? one : many;
+}
+function bucket(sum) { return sum === 0 ? '' : sum <= 3 ? 'b1' : sum <= 7 ? 'b2' : sum <= 11 ? 'b3' : 'b4'; }
+
+/* Finished results. A promised task with no answer on a past day counts as not done. */
+function doneStats(from, to) {
+  const t = todayKey();
+  let days = 0, done = 0, total = 0;
+  for (let k = from; k <= to; k = addDays(k, 1)) {
+    const d = dayDoc(k), isDone = d.taskDone === 'done';
+    if (isDone || (d.note && d.note.trim())) days++;
+    if (d.task && d.task.trim() && (d.taskDone || k < t)) { total++; if (isDone) done++; }
+  }
+  return { days, done, total };
+}
+function taskToday(k) {
+  const d = dayDoc(k), cur = d.taskDone;
+  return '<section><div class="eyebrow"><h2>' + (k === todayKey() ? 'Дело на сегодня' : 'Дело этого дня') + '</h2></div><div class="rows"><div class="row fit">' +
+    '<input type="text" id="task-today" data-task-day="' + k + '" value="' + esc(d.task) + '" placeholder="Одно дело, которое можно закончить за день" aria-label="Дело дня">' +
+    '<div class="seg" role="group" aria-label="Результат">' +
+    [['done', 'Сделано'], ['no', 'Не сделано']].map(([v, l]) => '<button type="button" data-task-result="' + v + '" aria-pressed="' + (cur === v) + '">' + l + '</button>').join('') +
+    '</div></div></div></section>';
+}
+function openAge(o) {
+  const h = (Date.now() - o.created) / 36e5;
+  if (h < 1) return 'только что';
+  if (h < 24) { const n = Math.floor(h); return n + ' ' + plural(n, 'час', 'часа', 'часов'); }
+  const n = Math.floor(h / 24);
+  return 'висит ' + n + ' ' + plural(n, 'день', 'дня', 'дней');
+}
+function openItems() {
+  const t = todayKey();
+  return Object.entries(store.open)
+    .map(([id, o]) => Object.assign({ id }, o))
+    .filter(o => typeof o.created === 'number' && (!o.closed || toKey(new Date(o.closed)) === t))
+    .sort((a, b) => (Number(!!a.closed) - Number(!!b.closed)) || a.created - b.created)
+    .map(o => {
+      const late = !o.closed && Date.now() - o.created >= 864e5;
+      const steps = Array.isArray(o.steps) ? o.steps : [];
+      const count = steps.length ? ' · ' + steps.filter(s => s.done).length + ' из ' + steps.length : '';
+      const exp = !o.closed && (o.id in openExp ? openExp[o.id] : steps.length > 0);
+      const chev = o.closed ? '' : '<button type="button" class="chev" data-open-exp="' + o.id + '" aria-expanded="' + exp + '" aria-label="Пункты: ' + esc(o.text) + '">' +
+        '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg></button>';
+      const panel = !exp ? '' : '<div class="panel">' + steps.map(s =>
+        '<div class="step"><label><input type="checkbox" data-step-check="' + o.id + '" data-step-id="' + s.id + '"' + (s.done ? ' checked' : '') + '><span>' + esc(s.text) + '</span></label>' +
+        '<button type="button" data-step-del="' + o.id + '" data-step-id="' + s.id + '" aria-label="Удалить пункт: ' + esc(s.text) + '">×</button></div>').join('') +
+        '<form class="stepform" data-step-form="' + o.id + '"><input type="text" placeholder="Добавить пункт" aria-label="Новый пункт"><button type="submit" aria-label="Добавить пункт">+</button></form></div>';
+      return '<li class="' + (o.closed ? 'closed' : late ? 'late' : '') + '"><div><p>' + esc(o.text) + '</p><small>' + (o.closed ? 'закрыто сегодня' : openAge(o)) + count + '</small></div>' +
+        '<div class="acts">' + chev + '<button type="button" ' + (o.closed ? 'data-open-back="' : 'data-open-close="') + o.id + '">' + (o.closed ? 'Вернуть' : 'Закрыто') + '</button></div>' + panel + '</li>';
+    }).join('');
+}
+function refreshOpen() { const el = document.getElementById('open-list'); if (el) el.innerHTML = openItems(); }
+function openToday(k) {
+  if (k !== todayKey()) return '';
+  return '<section><div class="eyebrow"><h2>Висит в голове</h2><small>таймер на 5 минут</small></div>' +
+    '<p class="sub">Закрыть можно тремя способами: решить, назначить конкретный шаг на конкретный день или отпустить.</p>' +
+    '<form class="openform" id="open-form"><input type="text" id="open-text" placeholder="Что зависло?" aria-label="Что зависло"><button type="submit">Записать</button></form>' +
+    '<ul class="open" id="open-list">' + openItems() + '</ul></section>';
+}
+function finishedGrowth() {
+  const t = todayKey(), now = doneStats(addDays(t, -29), t), prev = doneStats(addDays(t, -59), addDays(t, -30));
+  const cutoff = Date.now() - 30 * 864e5;
+  const items = Object.values(store.open).filter(o => typeof o.created === 'number' && o.created >= cutoff);
+  const stuck = items.filter(o => (o.closed || Date.now()) - o.created >= 864e5).length;
+  const opened = Object.values(store.open).filter(o => typeof o.created === 'number' && !o.closed).length;
+  const delta = now.days - prev.days;
+  const cmp = (prev.days || prev.total) ? ' ' + (delta === 0 ? 'Столько же, сколько в прошлые 30 дней.' : (delta > 0 ? '+' + delta : '−' + Math.abs(delta)) + ' к прошлым 30 дням.') : '';
+  return '<section><div class="eyebrow"><h2>Закончено</h2><small>30 дней</small></div>' +
+    '<p class="lead">' + (now.days ? now.days + ' ' + plural(now.days, 'день', 'дня', 'дней') + ' с законченным результатом' : 'Первый законченный результат появится здесь') + '</p>' +
+    '<p class="sub">Обещанных дел сделано: ' + now.done + ' из ' + now.total + '. Дело без ответа считается несделанным.' + cmp + '</p>' +
+    '<p class="sub">Висело дольше суток: ' + stuck + '. Открыто сейчас: ' + opened + '.</p></section>';
+}
+function screenField(m) {
+  const cur = weekDoc(m).screen, prev = weekDoc(addDays(m, -7)).screen;
+  return '<label for="w-screen">Экранное время за неделю, часов' +
+    '<small>На iPhone: Настройки, Экранное время.' + (typeof prev === 'number' ? ' На прошлой неделе: ' + prev + ' ч.' : '') + '</small>' +
+    '<input type="number" inputmode="decimal" min="0" step="0.5" id="w-screen" data-week-field="screen" value="' + (typeof cur === 'number' ? cur : '') + '"></label>';
+}
+
+/* Training goals. Each goal is scored on its own. Only explicitly marked days count.
+   Training: x1.01 and the miss run resets. First miss in a run: no change.
+   Every further miss: x0.99, never below the start. Rest: no change, run untouched. */
+function fitState(g) {
+  const keys = Object.keys(store.days).filter(k => ['train', 'rest', 'miss'].includes(store.days[k][g.field])).sort();
+  let idx = 1, run = 0, train = 0, rest = 0, miss = 0;
+  const series = keys.map(k => {
+    const f = store.days[k][g.field];
+    if (f === 'train') { idx *= 1.01; run = 0; train++; }
+    else if (f === 'miss') { miss++; run++; if (run > 1) idx = Math.max(1, idx * 0.99); }
+    else rest++;
+    return { k, idx };
+  });
+  return { idx, train, rest, miss, series };
+}
+function fitPct(idx) {
+  const v = Math.floor((idx - 1) * 1000 + 1e-6) / 10;
+  return '+' + v.toLocaleString('ru', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+}
+function fitLeft(idx) { return idx >= FIT_GOAL ? 0 : Math.ceil(Math.log(FIT_GOAL / idx) / Math.log(1.01) - 1e-9); }
+function fitLabel(g) { return fitPct(fitState(g).idx) + ' из +300%'; }
+function fitToday(k) {
+  return '<section><div class="eyebrow"><h2>Тренировки</h2></div><div class="rows">' + GOALS.map(g => {
+    const cur = dayDoc(k)[g.field];
+    return '<div class="row fit"><div><div class="eyebrow"><h2>' + g.name + '</h2><small id="fit-now-' + g.id + '">' + fitLabel(g) + '</small></div>' +
+      '<button type="button" class="chev" data-crit="' + g.id + '" aria-expanded="' + critOpen.has(g.id) + '" aria-controls="crit-' + g.id + '" aria-label="' + g.name + ': что считается">' +
+      '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg></button>' +
+      '<p class="focus" id="crit-' + g.id + '"' + (critOpen.has(g.id) ? '' : ' hidden') + '>Считается: ' + g.done + '</p></div>' +
+      '<div class="seg" role="group" aria-label="' + g.name + '">' +
+      FIT_MARKS.map(([v, l]) => '<button type="button" data-fit-goal="' + g.id + '" data-fit="' + v + '" aria-pressed="' + (cur === v) + '">' + l + '</button>').join('') +
+      '</div></div>';
+  }).join('') + '</div></section>';
+}
+function niceTop(max) {
+  for (const t of [5, 10, 25, 50, 100, 150, 200, 300]) if (max <= t) return t;
+  return Math.ceil(max / 100) * 100;
+}
+function fitReadout(p) { return fmtShort.format(parse(p.k)) + ': ' + fitPct(1 + p.pct / 100); }
+function fitChart(g, series) {
+  fitPts[g.id] = [];
+  if (series.length < 2) return '<p class="empty">График появится после второй отметки.</p>';
+  const W = Math.max(280, Math.round($main.clientWidth || 340)), H = 150, L = 46, R = 8, T = 10, B = 22;
+  const top = niceTop(Math.max(...series.map(p => (p.idx - 1) * 100)));
+  const yOf = v => T + (H - T - B) * (1 - v / top);
+  const pts = fitPts[g.id] = series.map((p, i) => {
+    const pct = (p.idx - 1) * 100;
+    return { k: p.k, pct, x: L + i * (W - L - R) / (series.length - 1), y: yOf(pct) };
+  });
+  const last = pts[pts.length - 1];
+  const line = pts.map(p => p.x.toFixed(1) + ',' + p.y.toFixed(1)).join(' ');
+  const area = L + ',' + yOf(0) + ' ' + line + ' ' + last.x.toFixed(1) + ',' + yOf(0);
+  const grid = [0, top / 2, top].map(v =>
+    '<line class="grid" x1="' + L + '" x2="' + (W - R) + '" y1="' + yOf(v) + '" y2="' + yOf(v) + '"/>' +
+    '<text x="' + (L - 6) + '" y="' + (yOf(v) + 4) + '" text-anchor="end">' + (v ? '+' + v + '%' : '0%') + '</text>').join('');
+  return '<svg class="chart" data-chart="' + g.id + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + g.name + ': прогресс, сейчас ' + fitPct(1 + last.pct / 100) + '">' +
+    grid + '<polygon class="area" points="' + area + '"/><polyline class="line" points="' + line + '"/>' +
+    '<text x="' + L + '" y="' + (H - 4) + '">' + fmtShort.format(parse(pts[0].k)) + '</text>' +
+    '<text x="' + (W - R) + '" y="' + (H - 4) + '" text-anchor="end">' + fmtShort.format(parse(last.k)) + '</text>' +
+    '<line class="cross" x1="' + last.x + '" x2="' + last.x + '" y1="' + T + '" y2="' + yOf(0) + '" hidden/>' +
+    '<circle class="dot" r="4.5" cx="' + last.x + '" cy="' + last.y + '"/></svg>' +
+    '<p class="readout">' + fitReadout(last) + '</p>';
+}
+function fitPoint(svg, p) {
+  const pts = fitPts[svg.dataset.chart] || [];
+  const cross = svg.querySelector('.cross'), dot = svg.querySelector('.dot'), read = svg.nextElementSibling;
+  if (!pts.length || !cross || !dot || !read) return;
+  const last = pts[pts.length - 1], cur = p || last;
+  cross.toggleAttribute('hidden', !p);
+  cross.setAttribute('x1', cur.x); cross.setAttribute('x2', cur.x);
+  dot.setAttribute('cx', cur.x); dot.setAttribute('cy', cur.y);
+  read.textContent = fitReadout(cur);
+}
+function fitGrowth(g) {
+  const s = fitState(g), month = todayKey().slice(0, 7), left = fitLeft(s.idx);
+  const fill = Math.min(100, (s.idx - 1) / (FIT_GOAL - 1) * 100);
+  const now = store.tests[month] || {};
+  const monthName = new Intl.DateTimeFormat('ru', { month: 'long' }).format(parse(month + '-01'));
+  const past = Object.keys(store.tests).filter(m => m !== month && g.tests.some(([f]) => typeof store.tests[m][f] === 'number')).sort().reverse().slice(0, 12);
+  const history = past.length
+    ? '<div class="tablewrap"><table class="tests"><caption hidden>Прошлые замеры</caption><thead><tr><td></td>' + g.tests.map(([, l]) => '<th scope="col">' + l + '</th>').join('') + '</tr></thead><tbody>' +
+      past.map(m => '<tr><th scope="row">' + new Intl.DateTimeFormat('ru', { month: 'short', year: '2-digit' }).format(parse(m + '-01')) + '</th>' +
+        g.tests.map(([f]) => '<td>' + (typeof store.tests[m][f] === 'number' ? store.tests[m][f] : '–') + '</td>').join('') + '</tr>').join('') +
+      '</tbody></table></div>'
+    : '';
+  return '<section><div class="eyebrow"><h2>' + g.name + '</h2><small>цель +300%</small></div>' +
+    '<p class="lead">' + fitPct(s.idx) + '</p>' +
+    '<div class="meter" role="img" aria-label="Выполнено ' + Math.floor(fill) + '% пути к цели"><i style="width:' + fill.toFixed(1) + '%"></i></div>' +
+    '<div class="scale"><span>0%</span><span>+300%</span></div>' +
+    '<p class="sub">Тренировок: ' + s.train + ', отдыха: ' + s.rest + ', пропусков: ' + s.miss + '. ' +
+      (left ? 'До цели минимум ' + left + ' ' + plural(left, 'тренировка', 'тренировки', 'тренировок') + '.' : 'Цель достигнута.') + '</p>' +
+    '<details><summary>График и замеры</summary><div class="fields">' +
+    fitChart(g, s.series) +
+    '<h2>Контрольный замер: ' + monthName + '</h2>' +
+    '<p class="sub">' + g.hint + '</p>' +
+    '<div class="pair">' + g.tests.map(([f, l]) =>
+      '<label for="test-' + f + '">' + l + '<input type="number" inputmode="numeric" min="0" id="test-' + f + '" data-test-month="' + month + '" data-test-field="' + f + '" value="' + (typeof now[f] === 'number' ? now[f] : '') + '"></label>').join('') +
+    '</div>' + history + '</div></details></section>';
+}
+
+/* ---------- views ---------- */
+function renderToday() {
+  const k = view.date, t = todayKey(), d = parse(k);
+  const focus = weekDoc(monday(k)).focus || {};
+  const rows = SPHERES.map(s => {
+    const cur = level(k, s.id);
+    const f = focus[s.id]
+      ? '<p class="focus">Фокус: ' + esc(focus[s.id]) + '</p>'
+      : '<p class="focus">Фокус не задан. <button type="button" class="link" data-view="week">Задать</button></p>';
+    return '<div class="row"><div><h2>' + esc(s.name) + '</h2>' + f + '</div>' +
+      '<div class="seg" role="group" aria-label="' + esc(s.name) + '">' +
+      LEVELS.map(([v, l]) => '<button type="button" data-sphere="' + s.id + '" data-level="' + v + '" aria-pressed="' + (cur === v) + '">' + l + '</button>').join('') +
+      '</div></div>';
+  }).join('');
+  const dayLabel = fmtDow.format(d) + (k === t ? ', сегодня' : k === addDays(t, -1) ? ', вчера' : '');
+  $main.innerHTML =
+    '<div class="head">' +
+      '<button type="button" class="arrow" data-shift="-1" aria-label="Предыдущий день">‹</button>' +
+      '<div><h1>' + fmtDay.format(d) + '</h1><p>' + dayLabel + '</p></div>' +
+      '<button type="button" class="arrow" data-shift="1" aria-label="Следующий день"' + (k >= t ? ' disabled' : '') + '>›</button>' +
+    '</div>' +
+    taskToday(k) + openToday(k) +
+    '<section><div class="eyebrow"><h2>Был ли сегодня шаг вперёд?</h2></div><div class="rows">' + rows + '</div></section>' +
+    fitToday(k) +
+    '<section><label for="note">Что сегодня закончено?' +
+      '<small>Только то, что можно назвать конкретно: решённая задача, коммит, отправленное письмо, изученная определённая тема. «Работа над проектом» не считается.</small>' +
+      '<textarea id="note" data-field="note" rows="3">' + esc(dayDoc(k).note) + '</textarea></label></section>' +
+    '<section><label for="task-next">' + (k === t ? 'Одно дело на завтра' : 'Одно дело на следующий день') +
+      '<small>Настолько маленькое, чтобы закончить его за день.</small>' +
+      '<input type="text" id="task-next" data-task-day="' + addDays(k, 1) + '" value="' + esc(dayDoc(addDays(k, 1)).task) + '"></label></section>' +
+    '<details><summary>Как это работает</summary><ol class="howto">' +
+      '<li>Вечером, по напоминанию: ответить по делу дня, сделать отметки, записать законченное и выбрать одно дело на завтра. Это 5 минут.</li>' +
+      '<li>В воскресенье раздел «Неделя»: посмотреть картину, разобрать, выбрать по одному фокусу на сферу.</li>' +
+      '<li>Раздел «Рост» показывает, идёт ли дело лучше, чем месяц назад.</li>' +
+      '<li>Тренировки считаются для каждого занятия отдельно: тренировка умножает результат на 1,01. Первый пропуск подряд ничего не меняет, каждый следующий умножает на 0,99. Отдых нейтрален. Считаются только отмеченные дни.</li>' +
+      '<li>Пропущенный день не ломает систему. Его можно заполнить позже стрелкой влево или просто продолжить.</li>' +
+    '</ol></details>';
+}
+
+function focusInputs(m, prefix) {
+  const f = weekDoc(m).focus || {};
+  return '<div class="fields">' + SPHERES.map(s =>
+    '<label for="' + prefix + '-' + s.id + '">' + esc(s.name) +
+    '<input type="text" id="' + prefix + '-' + s.id + '" data-focus-week="' + m + '" data-focus-sphere="' + s.id + '" value="' + esc(f[s.id]) + '" placeholder="' + esc(s.ex) + '"></label>'
+  ).join('') + '</div>';
+}
+
+function renderWeek() {
+  const m = view.week, cur = monday(todayKey()), w = weekDoc(m), sunday = addDays(m, 6);
+  const days = Array.from({ length: 7 }, (_, i) => addDays(m, i));
+  const hasFocus = w.focus && Object.values(w.focus).some(Boolean);
+  const grid = '<div class="tablewrap"><table><caption hidden>Отметки по дням</caption><thead><tr><td></td>' +
+    ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map(n => '<th scope="col">' + n + '</th>').join('') +
+    '<th scope="col" title="Сумма баллов">Σ</th></tr></thead><tbody>' +
+    SPHERES.map(s => '<tr><th scope="row">' + esc(s.short) + '</th>' + days.map((k, i) => {
+      const l = level(k, s.id);
+      const word = l === null ? 'нет отметки' : LEVELS[l][1];
+      const cls = l === 1 ? 'l1' : l === 2 ? 'l2' : '';
+      return '<td class="c ' + cls + '" title="' + fmtShort.format(parse(k)) + ': ' + word + '"></td>';
+    }).join('') + '<td class="total">' + score(m, sunday, s.id) + '</td></tr>').join('') +
+    '</tbody></table></div>';
+  const notes = days.filter(k => dayDoc(k).note).map(k =>
+    '<li><time datetime="' + k + '">' + fmtShort.format(parse(k)) + '</time><p>' + esc(dayDoc(k).note) + '</p></li>').join('');
+  const isMonthEnd = parse(sunday).getDate() <= 7;
+  const q = (field, label, hint) => '<label for="w-' + field + '">' + label + (hint ? '<small>' + hint + '</small>' : '') +
+    '<textarea id="w-' + field + '" data-week-field="' + field + '" rows="3">' + esc(w[field]) + '</textarea></label>';
+  $main.innerHTML =
+    '<div class="head">' +
+      '<button type="button" class="arrow" data-week-shift="-7" aria-label="Предыдущая неделя">‹</button>' +
+      '<div><h1>' + weekTitle(m) + '</h1><p>' + (m === cur ? 'эта неделя' : 'прошедшая неделя') + '</p></div>' +
+      '<button type="button" class="arrow" data-week-shift="7" aria-label="Следующая неделя"' + (m >= cur ? ' disabled' : '') + '>›</button>' +
+    '</div>' +
+    '<details' + (hasFocus ? '' : ' open') + '><summary>Фокус этой недели</summary><div>' + focusInputs(m, 'now') + '</div></details>' +
+    '<section><div class="eyebrow"><h2>Посмотреть неделю</h2><small>5 минут</small></div>' + grid +
+      '<div class="legend"><span><i></i>нет</span><span><i class="l1"></i>немного, 1 балл</span><span><i class="l2"></i>шаг вперёд, 2 балла</span></div>' +
+      (() => { const s = doneStats(m, sunday); return '<p class="sub">Обещанных дел сделано: ' + s.done + ' из ' + s.total + '. Дней с законченным результатом: ' + s.days + '.</p>'; })() +
+      (notes ? '<ul class="log">' + notes + '</ul>' : '<p class="empty">Здесь появятся записи за неделю из вечерних отметок.</p>') +
+    '</section>' +
+    '<section><div class="eyebrow"><h2>Разобрать</h2><small>15 минут</small></div><div class="fields">' +
+      screenField(m) +
+      q('worked', 'Что сработало?', 'Что стоит повторить на следующей неделе.') +
+      q('blocked', 'Что мешало?') +
+      q('change', 'Что поменять?', 'Одно изменение, не список.') +
+      (isMonthEnd ? q('month', 'Итог месяца: что теперь получается, чего месяц назад не получалось?', 'Этот ответ попадёт в раздел «Рост» и выделится.') : '') +
+    '</div></section>' +
+    '<section><div class="eyebrow"><h2>Фокус следующей недели</h2><small>10 минут</small></div>' +
+      '<p class="sub">По одному конкретному действию на сферу. Можно оставить пустым, если сфера сейчас не в приоритете.</p>' +
+      focusInputs(addDays(m, 7), 'next') +
+    '</section>';
+}
+
+function renderGrowth() {
+  const t = todayKey(), from = addDays(t, -29), prevTo = addDays(t, -30), prevFrom = addDays(t, -59);
+  const marked = countMarked(from, t), prevMarked = countMarked(prevFrom, prevTo);
+  const total = SPHERES.reduce((a, s) => a + score(from, t, s.id), 0);
+  const cmp = SPHERES.map(s => {
+    const now = score(from, t, s.id), before = score(prevFrom, prevTo, s.id), d = now - before;
+    let note = 'пока без сравнения', cls = '';
+    if (prevMarked) { note = d === 0 ? 'как месяцем раньше' : (d > 0 ? '+' + d : '−' + Math.abs(d)) + ' к прошлым 30 дням'; if (d > 0) cls = ' up'; }
+    return '<div class="cmp"><div><span class="name">' + esc(s.name) + '</span><span class="' + cls.trim() + '">' + note + '</span></div><b>' + now + '</b></div>';
+  }).join('');
+
+  const cur = monday(t);
+  const weeks = Array.from({ length: 12 }, (_, i) => addDays(cur, (i - 11) * 7));
+  let last = -1;
+  const monthHeads = weeks.map(m => {
+    const mon = parse(m).getMonth(); let txt = '';
+    if (mon !== last) { txt = fmtMon.format(parse(m)).replace('.', ''); last = mon; }
+    return '<th scope="col">' + txt + '</th>';
+  }).join('');
+  const heat = '<div class="tablewrap"><table class="heat"><caption hidden>Баллы по неделям</caption><thead><tr><td class="lab"></td>' + monthHeads + '</tr></thead><tbody>' +
+    SPHERES.map(s => '<tr><th scope="row">' + esc(s.short) + '</th>' + weeks.map(m => {
+      const sum = score(m, addDays(m, 6), s.id);
+      return '<td class="c ' + bucket(sum) + (m === cur ? ' now' : '') + '" title="' + weekTitle(m) + ': ' + sum + ' ' + plural(sum, 'балл', 'балла', 'баллов') + '"></td>';
+    }).join('') + '</tr>').join('') + '</tbody></table></div>';
+
+  const entries = [];
+  Object.keys(store.days).forEach(k => {
+    const d = store.days[k];
+    if (d.taskDone === 'done' && d.task && d.task.trim()) entries.push({ k, text: d.task });
+    if (d.note) entries.push({ k, text: d.note });
+  });
+  Object.keys(store.weeks).forEach(m => { if (store.weeks[m].month) entries.push({ k: addDays(m, 6), text: store.weeks[m].month, month: true }); });
+  entries.sort((a, b) => a.k < b.k ? 1 : a.k > b.k ? -1 : (a.month ? -1 : 1));
+  const log = entries.slice(0, 40).map(e =>
+    '<li' + (e.month ? ' class="month"' : '') + '><time datetime="' + e.k + '">' + (e.month ? 'Итог ' : '') + fmtShort.format(parse(e.k)) + '</time><p>' + esc(e.text) + '</p></li>').join('');
+
+  $main.innerHTML =
+    finishedGrowth() +
+    '<section><p class="lead">' + (marked
+      ? 'За 30 дней: ' + total + ' ' + plural(total, 'балл', 'балла', 'баллов') + ' в ' + marked + ' ' + plural(marked, 'отмеченном дне', 'отмеченных днях', 'отмеченных днях')
+      : 'Первая картина появится после вечерней отметки') + '</p>' +
+      '<p class="sub">Немного — 1 балл, шаг вперёд — 2. Важно сравнение с собой месяц назад, а не сама цифра.</p>' +
+      '<div class="rows">' + cmp + '</div></section>' +
+    GOALS.map(fitGrowth).join('') +
+    '<section><div class="eyebrow"><h2>12 недель</h2></div>' + heat +
+      '<div class="legend"><span><i></i>0</span><span><i class="b1"></i>1–3</span><span><i class="b2"></i>4–7</span><span><i class="b3"></i>8–11</span><span><i class="b4"></i>12–14</span><span>баллов за неделю</span></div></section>' +
+    '<section><div class="eyebrow"><h2>Что закончено</h2></div>' +
+      (log ? '<ul class="log">' + log + '</ul>' : '<p class="empty">Сюда будут складываться законченные дела, вечерние записи и итоги месяцев.</p>') +
+    '</section>' + dataTools();
+}
+
+function render() {
+  document.querySelectorAll('nav button').forEach(b => {
+    if (b.dataset.view === view.name) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  });
+  if (view.name === 'week') renderWeek();
+  else if (view.name === 'growth') renderGrowth();
+  else renderToday();
+}
+
+function go(name) {
+  view.name = name;
+  if (name === 'today' && view.followToday) view.date = todayKey();
+  try { if (location.hash !== '#' + name) location.hash = name; } catch (e) {}
+  render();
+  window.scrollTo(0, 0);
+}
+
+/* ---------- saving and sync ---------- */
+function loadJSON(key, fallback) {
+  try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; }
+}
+const OUTBOX_KEY = 'zhurnal-outbox-v1', SESSION_KEY = 'zhurnal-session-v1';
+const CONFIG = window.ZHURNAL_CONFIG || {};
+let outbox = loadJSON(OUTBOX_KEY, {});
+let session = loadJSON(SESSION_KEY, null);
+let pushTimer = null, syncing = false, syncAgain = false, unloading = false;
+
+function setStatus(text, isErr) { $status.textContent = text; $status.classList.toggle('err', !!isErr); }
+function saveLocal() {
+  try {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(store));
+    localStorage.setItem(OUTBOX_KEY, JSON.stringify(outbox));
+  } catch (e) { setStatus('Устройство не даёт сохранять записи.', true); }
+}
+function saveSession() {
+  try {
+    if (session) localStorage.setItem(SESSION_KEY, JSON.stringify(session)); else localStorage.removeItem(SESSION_KEY);
+  } catch (e) {}
+}
+function schedule(coll, id) {
+  outbox[coll + '/' + id] = Date.now();
+  saveLocal();
+  setStatus('Сохраняю…');
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(() => { pushTimer = null; sync(); }, 700);
+}
+function retryFailed() {}
+function flushAll() {
+  if (pushTimer) { clearTimeout(pushTimer); pushTimer = null; unloading = true; sync().finally(() => { unloading = false; }); }
+}
+
+async function refreshToken() {
+  const r = await fetch(CONFIG.url + '/auth/v1/token?grant_type=refresh_token', {
+    method: 'POST',
+    headers: { apikey: CONFIG.anonKey, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ refresh_token: session.refresh_token }),
+  });
+  if (!r.ok) throw Object.assign(new Error('session'), { sessionEnded: true });
+  session = await r.json();
+  saveSession();
+}
+async function api(path, opts, retried) {
+  const o = opts || {};
+  const res = await fetch(CONFIG.url + path, Object.assign({}, o, {
+    headers: Object.assign({ apikey: CONFIG.anonKey, Authorization: 'Bearer ' + session.access_token, 'Content-Type': 'application/json' }, o.headers),
+  }));
+  if (res.status === 401 && !retried) { await refreshToken(); return api(path, opts, true); }
+  if (!res.ok) throw Object.assign(new Error('http'), { status: res.status });
+  return res;
+}
+async function push() {
+  for (;;) {
+    const keys = Object.keys(outbox).slice(0, 200);
+    if (!keys.length) return;
+    const stamps = keys.map(k => outbox[k]);
+    const rows = keys.map(k => {
+      const cut = k.indexOf('/'), coll = k.slice(0, cut), id = k.slice(cut + 1);
+      return { user_id: session.user.id, coll, id, data: store[coll][id] || {} };
+    });
+    const body = JSON.stringify(rows);
+    await api('/rest/v1/docs?on_conflict=user_id,coll,id', {
+      method: 'POST', body, keepalive: unloading && body.length < 60000,
+      headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+    });
+    keys.forEach((k, i) => { if (outbox[k] === stamps[i]) delete outbox[k]; });
+    saveLocal();
+  }
+}
+function canon(v) {
+  if (Array.isArray(v)) return v.map(canon);
+  if (v && typeof v === 'object') return Object.keys(v).sort().reduce((o, k) => { o[k] = canon(v[k]); return o; }, {});
+  return v;
+}
+async function pull() {
+  const next = { days: {}, weeks: {}, tests: {}, open: {} };
+  for (let from = 0; ; from += 1000) {
+    const rows = await (await api('/rest/v1/docs?select=coll,id,data&order=coll,id&limit=1000&offset=' + from)).json();
+    rows.forEach(r => { if (next[r.coll]) next[r.coll][r.id] = r.data; });
+    if (rows.length < 1000) break;
+  }
+  Object.keys(next).forEach(coll => Object.keys(store[coll]).forEach(id => {
+    if (outbox[coll + '/' + id]) next[coll][id] = store[coll][id];
+  }));
+  const changed = JSON.stringify(canon(next)) !== JSON.stringify(canon(store));
+  Object.assign(store, next);
+  saveLocal();
+  if (changed && !isEditing() && session) render();
+}
+async function sync() {
+  if (!session || !CONFIG.url) return;
+  if (syncing) { syncAgain = true; return; }
+  syncing = true;
+  try {
+    await push();
+    await pull();
+    if (!pushTimer) setStatus('Сохранено');
+  } catch (e) {
+    if (e.sessionEnded) { session = null; saveSession(); showLogin('Сессия закончилась, войди ещё раз. Записи на устройстве сохранены.'); }
+    else if (e.status) setStatus('Сервер ответил ошибкой ' + e.status + '. Записи остаются на устройстве.', true);
+    else setStatus(Object.keys(outbox).length ? 'Нет связи. Записи на устройстве, отправятся позже.' : 'Нет связи. Показаны записи с устройства.');
+  }
+  syncing = false;
+  if (syncAgain) { syncAgain = false; sync(); }
+}
+/* Waits briefly for fresh data so a stale screen does not overwrite a newer entry. */
+async function refreshFromServer() {
+  if (!session) return;
+  if (!isEditing()) $main.inert = true;
+  const unlock = setTimeout(() => { $main.inert = false; }, 3000);
+  await sync();
+  clearTimeout(unlock);
+  $main.inert = false;
+}
+
+/* ---------- input ---------- */
+document.addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  if (b.dataset.view) { go(b.dataset.view); return; }
+  if (b.dataset.shift) {
+    view.date = addDays(view.date, Number(b.dataset.shift));
+    view.followToday = view.date === todayKey();
+    render(); return;
+  }
+  if (b.dataset.weekShift) { view.week = addDays(view.week, Number(b.dataset.weekShift)); render(); return; }
+  if (b.dataset.openExp) {
+    const id = b.dataset.openExp;
+    openExp[id] = b.getAttribute('aria-expanded') !== 'true';
+    refreshOpen();
+    const again = document.querySelector('[data-open-exp="' + id + '"]');
+    if (again) again.focus();
+    return;
+  }
+  if (b.dataset.stepDel) {
+    const id = b.dataset.stepDel, o = store.open[id];
+    if (!o || !Array.isArray(o.steps)) return;
+    o.steps = o.steps.filter(s => s.id !== b.dataset.stepId);
+    openExp[id] = true;
+    refreshOpen();
+    schedule('open', id);
+    retryFailed();
+    return;
+  }
+  if (b.dataset.crit) {
+    const id = b.dataset.crit, open = !critOpen.has(id);
+    if (open) critOpen.add(id); else critOpen.delete(id);
+    b.setAttribute('aria-expanded', String(open));
+    document.getElementById('crit-' + id).hidden = !open;
+    return;
+  }
+  if (b.dataset.taskResult) {
+    const k = view.date, doc = store.days[k] || (store.days[k] = {}), v = b.dataset.taskResult;
+    if (doc.taskDone === v) delete doc.taskDone; else doc.taskDone = v;
+    b.parentElement.querySelectorAll('button').forEach(x =>
+      x.setAttribute('aria-pressed', String(doc.taskDone === x.dataset.taskResult)));
+    schedule('days', k);
+    retryFailed();
+    return;
+  }
+  if (b.dataset.openClose || b.dataset.openBack) {
+    const id = b.dataset.openClose || b.dataset.openBack, o = store.open[id];
+    if (!o) return;
+    if (b.dataset.openClose) o.closed = Date.now(); else delete o.closed;
+    refreshOpen();
+    schedule('open', id);
+    retryFailed();
+    return;
+  }
+  if (b.dataset.fit) {
+    const k = view.date, doc = store.days[k] || (store.days[k] = {}), v = b.dataset.fit;
+    const g = GOALS.find(x => x.id === b.dataset.fitGoal);
+    if (doc[g.field] === v) delete doc[g.field]; else doc[g.field] = v;
+    b.parentElement.querySelectorAll('button').forEach(x =>
+      x.setAttribute('aria-pressed', String(doc[g.field] === x.dataset.fit)));
+    document.getElementById('fit-now-' + g.id).textContent = fitLabel(g);
+    schedule('days', k);
+    retryFailed();
+    return;
+  }
+  if (b.dataset.level !== undefined) {
+    const k = view.date, doc = store.days[k] || (store.days[k] = {}), steps = doc.steps || (doc.steps = {});
+    const sid = b.dataset.sphere, v = Number(b.dataset.level);
+    if (steps[sid] === v) delete steps[sid]; else steps[sid] = v;
+    b.parentElement.querySelectorAll('button').forEach(x =>
+      x.setAttribute('aria-pressed', String(steps[sid] === Number(x.dataset.level))));
+    schedule('days', k);
+    retryFailed();
+  }
+});
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.field === 'note') {
+    const k = view.date;
+    (store.days[k] || (store.days[k] = {})).note = t.value;
+    schedule('days', k);
+  } else if (t.dataset.weekField) {
+    const m = view.week;
+    const doc = store.weeks[m] || (store.weeks[m] = {}), f = t.dataset.weekField, n = Number(t.value);
+    if (t.type !== 'number') doc[f] = t.value;
+    else if (t.value === '' || !Number.isFinite(n) || n < 0) delete doc[f];
+    else doc[f] = n;
+    schedule('weeks', m);
+  } else if (t.dataset.focusWeek) {
+    const m = t.dataset.focusWeek, doc = store.weeks[m] || (store.weeks[m] = {});
+    (doc.focus || (doc.focus = {}))[t.dataset.focusSphere] = t.value;
+    schedule('weeks', m);
+  } else if (t.dataset.taskDay) {
+    const k = t.dataset.taskDay;
+    (store.days[k] || (store.days[k] = {})).task = t.value;
+    schedule('days', k);
+  } else if (t.dataset.testMonth) {
+    const m = t.dataset.testMonth, doc = store.tests[m] || (store.tests[m] = {}), n = Number(t.value);
+    if (t.value === '' || !Number.isFinite(n) || n < 0) delete doc[t.dataset.testField]; else doc[t.dataset.testField] = n;
+    schedule('tests', m);
+  } else return;
+  retryFailed();
+});
+document.addEventListener('pointermove', e => {
+  const svg = e.target.closest && e.target.closest('[data-chart]');
+  document.querySelectorAll('[data-chart]').forEach(s => { if (s !== svg) fitPoint(s, null); });
+  const pts = svg && fitPts[svg.dataset.chart];
+  if (!pts || !pts.length) return;
+  const r = svg.getBoundingClientRect(), vbW = svg.viewBox.baseVal.width;
+  const x = (e.clientX - r.left) * vbW / r.width;
+  fitPoint(svg, pts.reduce((a, p) => Math.abs(p.x - x) < Math.abs(a.x - x) ? p : a));
+});
+document.addEventListener('change', e => {
+  const id = e.target.dataset.stepCheck;
+  if (!id) return;
+  const o = store.open[id], s = o && Array.isArray(o.steps) && o.steps.find(x => x.id === e.target.dataset.stepId);
+  if (!s) return;
+  s.done = e.target.checked;
+  openExp[id] = true;
+  refreshOpen();
+  schedule('open', id);
+  retryFailed();
+});
+document.addEventListener('submit', e => {
+  const stepOf = e.target.dataset.stepForm;
+  if (stepOf) {
+    e.preventDefault();
+    const o = store.open[stepOf], text = e.target.querySelector('input').value.trim();
+    if (!o || !text) return;
+    if (!Array.isArray(o.steps)) o.steps = [];
+    o.steps.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), text, done: false });
+    openExp[stepOf] = true;
+    refreshOpen();
+    const form = document.querySelector('[data-step-form="' + stepOf + '"] input');
+    if (form) form.focus();
+    schedule('open', stepOf);
+    retryFailed();
+    return;
+  }
+  if (e.target.id !== 'open-form') return;
+  e.preventDefault();
+  const input = document.getElementById('open-text'), text = input.value.trim();
+  if (!text) return;
+  const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  store.open[id] = { text, created: Date.now() };
+  input.value = '';
+  refreshOpen();
+  schedule('open', id);
+  retryFailed();
+});
+window.addEventListener('pagehide', flushAll);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { flushAll(); return; }
+  const t = todayKey();
+  if (view.followToday && view.date !== t && !isEditing()) { view.date = t; view.week = monday(t); render(); }
+});
+window.addEventListener('hashchange', () => {
+  const h = location.hash.slice(1);
+  if (['today', 'week', 'growth'].includes(h) && h !== view.name) go(h);
+});
+function isEditing() { const a = document.activeElement; return !!a && (a.tagName === 'TEXTAREA' || a.tagName === 'INPUT'); }
+
+/* ---------- account and data ---------- */
+const $nav = document.querySelector('nav');
+function showLogin(message) {
+  $nav.hidden = true;
+  $main.inert = false;
+  setStatus('');
+  const configured = CONFIG.url && CONFIG.anonKey;
+  $main.innerHTML = '<section><p class="lead">Вход</p>' +
+    (configured
+      ? '<form class="fields" id="login-form">' +
+        '<label for="login-email">Почта<input type="email" id="login-email" autocomplete="username" required></label>' +
+        '<label for="login-password">Пароль<input type="password" id="login-password" autocomplete="current-password" required></label>' +
+        '<div class="btnrow"><button type="submit" class="btn primary">Войти</button></div></form>'
+      : '<p class="sub">Приложение ещё не подключено к серверу: заполни адрес и ключ в файле config.js.</p>') +
+    '<p class="sub" id="login-msg">' + esc(message) + '</p></section>';
+}
+function showApp() {
+  $nav.hidden = false;
+  render();
+}
+function dataTools() {
+  return '<details><summary>Данные и аккаунт</summary><div class="fields">' +
+    '<p class="sub">Копия нужна на всякий случай: все записи одним файлом.</p>' +
+    '<div class="btnrow"><button type="button" class="btn" data-action="export">Скачать копию</button>' +
+    '<button type="button" class="btn" data-action="import">Загрузить копию</button>' +
+    '<button type="button" class="btn" data-action="logout">Выйти</button></div>' +
+    '<input type="file" id="import-file" accept="application/json,.json" hidden></div></details>';
+}
+function importData(text) {
+  let data;
+  try { data = JSON.parse(text); } catch (e) { setStatus('Файл не похож на копию журнала.', true); return; }
+  const colls = Object.keys(store);
+  if (!data || typeof data !== 'object' || !colls.some(c => data[c] && typeof data[c] === 'object')) { setStatus('Файл не похож на копию журнала.', true); return; }
+  const count = colls.reduce((n, c) => n + Object.keys(data[c] || {}).length, 0);
+  if (!confirm('Загрузить записей: ' + count + '? Записи за те же дни будут заменены.')) return;
+  colls.forEach(c => Object.entries(data[c] || {}).forEach(([id, doc]) => {
+    store[c][id] = doc;
+    outbox[c + '/' + id] = Date.now();
+  }));
+  saveLocal();
+  render();
+  setStatus('Сохраняю…');
+  sync();
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-action]');
+  if (!b) return;
+  const act = b.dataset.action;
+  if (act === 'export') {
+    const url = URL.createObjectURL(new Blob([JSON.stringify(store, null, 1)], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url; a.download = 'zhurnal-rosta-' + todayKey() + '.json';
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  } else if (act === 'import') {
+    document.getElementById('import-file').click();
+  } else if (act === 'logout') {
+    const pending = Object.keys(outbox).length;
+    if (!confirm(pending ? 'Часть записей ещё не отправлена на сервер и пропадёт. Всё равно выйти?' : 'Выйти из аккаунта на этом устройстве?')) return;
+    session = null; saveSession();
+    outbox = {};
+    Object.keys(store).forEach(c => { store[c] = {}; });
+    try { localStorage.removeItem(LOCAL_KEY); localStorage.removeItem(OUTBOX_KEY); } catch (err) {}
+    showLogin('');
+  }
+});
+document.addEventListener('change', e => {
+  if (e.target.id !== 'import-file' || !e.target.files[0]) return;
+  e.target.files[0].text().then(importData);
+});
+document.addEventListener('submit', async e => {
+  if (e.target.id !== 'login-form') return;
+  e.preventDefault();
+  const msg = document.getElementById('login-msg');
+  msg.textContent = 'Вхожу…';
+  try {
+    const r = await fetch(CONFIG.url + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: { apikey: CONFIG.anonKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: document.getElementById('login-email').value.trim(), password: document.getElementById('login-password').value }),
+    });
+    if (!r.ok) { msg.textContent = 'Неверная почта или пароль.'; return; }
+    session = await r.json();
+    saveSession();
+    showApp();
+    await refreshFromServer();
+  } catch (err) {
+    msg.textContent = 'Нет связи с сервером. Проверь интернет.';
+  }
+});
+let hiddenAt = 0;
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { hiddenAt = Date.now(); return; }
+  if (Date.now() - hiddenAt > 30000) refreshFromServer();
+});
+window.addEventListener('online', () => sync());
+
+/* ---------- startup ---------- */
+(function boot() {
+  const h = location.hash.slice(1);
+  if (['today', 'week', 'growth'].includes(h)) view.name = h;
+  const saved = loadJSON(LOCAL_KEY, null);
+  if (saved) Object.keys(store).forEach(c => { store[c] = saved[c] || {}; });
+  if (!session) { showLogin(''); }
+  else { showApp(); setStatus('Обновляю…'); refreshFromServer(); }
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+})();
+</script>
+</body>
+</html>
