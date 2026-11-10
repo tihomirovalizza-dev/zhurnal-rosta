@@ -1084,7 +1084,7 @@ document.addEventListener('submit', async e => {
   msg.textContent = signup ? 'Создаю аккаунт…' : 'Вхожу…';
   const credentials = { email: document.getElementById('login-email').value.trim(), password: document.getElementById('login-password').value };
   try {
-    const r = await fetch(CONFIG.url + (signup ? '/auth/v1/signup' : '/auth/v1/token?grant_type=password'), {
+    const r = await fetch(CONFIG.url + (signup ? '/auth/v1/signup?redirect_to=' + encodeURIComponent(location.origin + location.pathname) : '/auth/v1/token?grant_type=password'), {
       method: 'POST',
       headers: { apikey: CONFIG.anonKey, 'Content-Type': 'application/json' },
       body: JSON.stringify(signup ? Object.assign({ data: { privacy_accepted_at: new Date().toISOString() } }, credentials) : credentials),
