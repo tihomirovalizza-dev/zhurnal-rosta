@@ -341,7 +341,7 @@ function openItems() {
       const late = !o.closed && Date.now() - o.created >= 864e5;
       const steps = Array.isArray(o.steps) ? o.steps : [];
       const count = steps.length ? ' · ' + steps.filter(s => s.done).length + ' из ' + steps.length : '';
-      const exp = !o.closed && (o.id in openExp ? openExp[o.id] : steps.length > 0);
+      const exp = !o.closed && !!openExp[o.id];
       const chev = o.closed ? '' : '<button type="button" class="chev" data-open-exp="' + o.id + '" aria-expanded="' + exp + '" aria-label="Пункты: ' + esc(o.text) + '">' +
         '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg></button>';
       const panel = !exp ? '' : '<div class="panel">' + steps.map(s =>
